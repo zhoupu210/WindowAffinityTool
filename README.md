@@ -1,6 +1,10 @@
-# 窗口显示亲和性工具
+# Window Affinity Modify Tool
 
 一个 Windows 工具，用于设置任意窗口的 `SetWindowDisplayAffinity` 属性，使其在屏幕录制/截图软件中不可见。
+
+## 演示
+
+https://github.com/user-attachments/assets/19616f9f-3598-4a3f-a2d2-7a5942ec46b5
 
 ## 功能
 
@@ -18,7 +22,7 @@
 
 ## 使用方法
 
-1. 以管理员身份运行 `WindowAffinityTool64.exe`
+1. 可以管理员身份运行 `WindowAffinityTool64.exe`
 2. 选择注入方式（推荐 Shellcode）
 3. 将 Finder 图标拖拽到目标窗口
 4. 确认操作
