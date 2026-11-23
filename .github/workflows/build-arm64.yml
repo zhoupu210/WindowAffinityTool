@@ -1,0 +1,31 @@
+name: Build Windows ARM64
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-arm64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC ARM64
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
+
+      - name: Compile ARM64 Binaries
+        run: |
+          cl /O2 /DUNICODE /D_UNICODE main.c /Fe:WindowAffinityTool64.exe /link /SUBSYSTEM:WINDOWS gdi32.lib comctl32.lib advapi32.lib user32.lib
+          cl /O2 /DUNICODE /D_UNICODE /LD inject_dll.c /Fe:inject_dll64.dll /link user32.lib
+
+      - name: Upload ARM64 Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: WindowAffinityTool-WinARM64
+          path: |
+            WindowAffinityTool64.exe
+            inject_dll64.dll
