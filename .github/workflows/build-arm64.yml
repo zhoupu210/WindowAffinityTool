@@ -15,17 +15,15 @@ jobs:
       - name: Compile ARM64 Binaries
         shell: cmd
         run: |
-          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.ARM64 -property installationPath`) do (
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath`) do (
             set VS_PATH=%%i
           )
-          if not defined VS_PATH (
-            echo "ARM64 MSVC tools not found, trying default VS path..."
-            for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath`) do (
-              set VS_PATH=%%i
-            )
-          )
           echo VS_PATH=%VS_PATH%
-          call "%VS_PATH%\VC\Auxiliary\Build\vcvarsall.bat" arm64
+          call "%VS_PATH%\VC\Auxiliary\Build\vcvarsall.bat" amd64_arm64
+          where cl || (
+            echo Fallback to Hostarm64...
+            call "%VS_PATH%\VC\Auxiliary\Build\vcvarsall.bat" arm64
+          )
           cl /O2 /DUNICODE /D_UNICODE main.c /Fe:WindowAffinityTool64.exe /link /SUBSYSTEM:WINDOWS gdi32.lib comctl32.lib advapi32.lib user32.lib
           cl /O2 /DUNICODE /D_UNICODE /LD inject_dll.c /Fe:inject_dll64.dll /link user32.lib
 
